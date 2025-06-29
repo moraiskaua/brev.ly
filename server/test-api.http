@@ -1,0 +1,36 @@
+### Health Check
+GET http://localhost:3333/health
+
+### Criar um novo link
+POST http://localhost:3333/api/links
+Content-Type: application/json
+
+{
+  "originalUrl": "https://www.google.com"
+}
+
+### Criar outro link
+POST http://localhost:3333/api/links
+Content-Type: application/json
+
+{
+  "originalUrl": "https://github.com"
+}
+
+### Listar todos os links
+GET http://localhost:3333/api/links
+
+### Obter link por URL encurtada (substitua {shortUrl} pela URL encurtada retornada)
+GET http://localhost:3333/api/links/{shortUrl}
+
+### Deletar um link (substitua {id} pelo ID retornado)
+DELETE http://localhost:3333/api/links/{id}
+
+### Incrementar contador de acessos (substitua {id} pelo ID retornado)
+PATCH http://localhost:3333/api/links/{id}/access
+
+### Exportar links em CSV
+GET http://localhost:3333/api/links/export/csv
+
+### Redirecionar para URL original (substitua {shortUrl} pela URL encurtada)
+GET http://localhost:3333/{shortUrl} 
