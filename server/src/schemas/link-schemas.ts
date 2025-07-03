@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 export const createLinkSchema = z.object({
-  originalUrl: z.string().url('URL deve ser válida'),
+  originalUrl: z.string().min(1, 'URL deve ser válida'),
+  shortUrl: z.string().min(1, 'URL encurtada é obrigatória'),
 });
 
 export const getLinkByShortUrlSchema = z.object({

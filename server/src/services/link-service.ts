@@ -6,36 +6,24 @@ import {
   DeleteLinkInput,
   IncrementAccessInput,
 } from '../schemas/link-schemas';
-import { generateShortUrl } from '../utils/generate-short-url';
 
 export class LinkService {
-  private shortUrlGenerator: () => Promise<string>;
-
-  constructor(shortUrlGenerator: () => Promise<string> = generateShortUrl) {
-    this.shortUrlGenerator = shortUrlGenerator;
-  }
-
   async createLink(data: CreateLinkInput) {
-    let shortUrl: string;
-    let existingLink;
-
-    do {
-      shortUrl = await this.shortUrlGenerator();
-      existingLink = await db
-        .select()
-        .from(links)
-        .where(eq(links.shortUrl, shortUrl))
-        .limit(1);
-    } while (existingLink.length > 0);
-
+    const existingLink = await db
+      .select()
+      .from(links)
+      .where(eq(links.shortUrl, data.shortUrl))
+      .limit(1);
+    if (existingLink.length > 0) {
+      throw new Error('Esse link encurtado já existe. Escolha outro.');
+    }
     const [newLink] = await db
       .insert(links)
       .values({
         originalUrl: data.originalUrl,
-        shortUrl,
+        shortUrl: data.shortUrl,
       })
       .returning();
-
     return newLink;
   }
 

@@ -26,10 +26,7 @@ export function Button({ variant = 'primary', icon, ...props }: ButtonProps) {
   const variantClass = variants[variant][state];
 
   return (
-    <button
-      type='button'
-      className={`${baseStyles} ${variantClass} ${props.className}`}
-    >
+    <button className={`${baseStyles} ${variantClass} ${props.className}`}>
       {icon && <span className='mr-2 flex items-center'>{icon}</span>}
       {props.children}
     </button>

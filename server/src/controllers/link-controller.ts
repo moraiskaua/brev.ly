@@ -33,6 +33,8 @@ export class LinkController {
         data: link,
       });
     } catch (error) {
+      console.log(error);
+
       if (error instanceof Error) {
         return reply.status(400).send({ error: error.message });
       }
