@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import CopyIcon from '../assets/copy.svg';
 import { DownloadIcon } from '../assets/download';
 import { LinkIcon } from '../assets/link';
@@ -41,8 +42,8 @@ export default function LinksList() {
     }
   }
 
-  async function handleCopy(shortUrl: string) {
-    const url = `${window.location.origin.replace(/\/$/, '')}/${shortUrl}`;
+  async function handleCopy(id: string) {
+    const url = `${window.location.origin.replace(/\/$/, '')}/redirect/${id}`;
     await navigator.clipboard.writeText(url);
     toast.success('Link copiado!');
   }
@@ -86,22 +87,20 @@ export default function LinksList() {
                 className='flex flex-col border-b border-gray-200 pb-2 last:border-b-0 last:pb-0'
               >
                 <div className='flex items-center justify-between'>
-                  <a
-                    href={`https://${link.originalUrl}`}
-                    target='_blank'
-                    rel='noopener noreferrer'
+                  <Link
+                    to={`/redirect/${link.shortUrl}`}
                     className='text-xs text-blue-700 hover:underline'
                   >
                     {SHORT_URL_PREFIX}
                     {link.shortUrl}
-                  </a>
+                  </Link>
                   <div className='flex items-center gap-2'>
                     <Button
                       variant='secondary'
                       className='p-1 rounded hover:bg-gray-200 transition'
                       title='Copiar link'
                       type='button'
-                      onClick={() => handleCopy(link.shortUrl)}
+                      onClick={() => handleCopy(link.id)}
                     >
                       <img src={CopyIcon} alt='Copiar' className='w-4 h-4' />
                     </Button>
