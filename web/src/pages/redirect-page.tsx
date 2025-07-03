@@ -25,17 +25,21 @@ export default function RedirectPage() {
   console.log(data);
 
   useEffect(() => {
-    if (data) {
-      const url = data.originalUrl.startsWith('http')
-        ? data.originalUrl
-        : `https://${data.originalUrl}`;
-      setTimeout(() => {
-        window.location.href = url;
-      }, 1200);
+    async function incrementAndRedirect() {
+      if (data) {
+        await axios.patch(`http://localhost:3333/api/links/${data.id}/access`);
+        const url = data.originalUrl.startsWith('http')
+          ? data.originalUrl
+          : `https://${data.originalUrl}`;
+        setTimeout(() => {
+          window.location.href = url;
+        }, 1200);
+      }
+      if (isError) {
+        navigate('/404', { replace: true });
+      }
     }
-    if (isError) {
-      navigate('/404', { replace: true });
-    }
+    incrementAndRedirect();
   }, [data, isError, navigate]);
 
   return (

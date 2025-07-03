@@ -3,8 +3,8 @@ import { Toaster } from 'react-hot-toast';
 import { Route, Routes } from 'react-router-dom';
 import LinkForm from './components/link-form';
 import LinksList from './components/links-list';
-import NotFoundPage from './pages/NotFoundPage';
-import RedirectPage from './pages/RedirectPage';
+import NotFoundPage from './pages/not-found-page';
+import RedirectPage from './pages/redirect-page';
 
 const queryClient = new QueryClient();
 

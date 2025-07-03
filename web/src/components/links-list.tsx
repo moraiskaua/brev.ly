@@ -42,11 +42,17 @@ export default function LinksList() {
     }
   }
 
-  async function handleCopy(id: string) {
-    const url = `${window.location.origin.replace(/\/$/, '')}/redirect/${id}`;
+  async function handleCopy(shortUrl: string) {
+    console.log(shortUrl);
+    const url = `${window.location.origin.replace(
+      /\/$/,
+      ''
+    )}/redirect/${shortUrl}`;
     await navigator.clipboard.writeText(url);
     toast.success('Link copiado!');
   }
+
+  console.log(links);
 
   return (
     <div className='bg-gray-100 rounded-lg p-6 flex flex-col gap-4 w-full max-w-md min-h-[220px]'>
@@ -63,7 +69,7 @@ export default function LinksList() {
           variant='secondary'
           disabled={!links || links.length === 0 || isLoading || isFetching}
           icon={<DownloadIcon color='#74798B' width={20} height={20} />}
-          className='text-xs'
+          className='w-full flex items-center justify-center gap-2 rounded-md px-1 py-3 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-200 text-gray-500 border border-transparent text-xs'
           onClick={handleExport}
         >
           Baixar CSV
@@ -81,28 +87,36 @@ export default function LinksList() {
       ) : (
         <ul className='flex flex-col gap-2'>
           {links.map(
-            (link: { id: string; originalUrl: string; shortUrl: string }) => (
+            (link: {
+              id: string;
+              originalUrl: string;
+              shortUrl: string;
+              accessCount: number;
+            }) => (
               <li
                 key={link.id}
                 className='flex flex-col border-b border-gray-200 pb-2 last:border-b-0 last:pb-0'
               >
                 <div className='flex items-center justify-between'>
-                  <Link
-                    to={`/redirect/${link.shortUrl}`}
-                    className='text-xs text-blue-700 hover:underline'
-                  >
-                    {SHORT_URL_PREFIX}
-                    {link.shortUrl}
-                  </Link>
+                  <div className='flex items-center gap-2'>
+                    <Link
+                      to={`/redirect/${link.shortUrl}`}
+                      className='text-xs text-blue-700 hover:underline'
+                    >
+                      {SHORT_URL_PREFIX}
+                      {link.shortUrl}
+                    </Link>
+                    <span className='text-xs text-gray-500'>
+                      ({link.accessCount})
+                    </span>
+                  </div>
                   <div className='flex items-center gap-2'>
                     <Button
                       variant='secondary'
-                      className='p-1 rounded hover:bg-gray-200 transition'
                       title='Copiar link'
-                      type='button'
-                      onClick={() => handleCopy(link.id)}
+                      onClick={async () => await handleCopy(link.shortUrl)}
                     >
-                      <img src={CopyIcon} alt='Copiar' className='w-4 h-4' />
+                      <img src={CopyIcon} alt='Copiar' className='size-4' />
                     </Button>
                     <form
                       onSubmit={async (e) => {
