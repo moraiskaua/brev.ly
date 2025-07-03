@@ -21,6 +21,6 @@ export async function deleteLink(id: string) {
 }
 
 export async function exportCsv() {
-  const { data } = await api.get('/links/export/csv', { responseType: 'blob' });
-  return data;
+  const { data } = await api.get('/links/export/csv');
+  return data.data.csvUrl;
 }

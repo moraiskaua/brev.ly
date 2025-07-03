@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
 import LinkForm from './components/link-form';
 import LinksList from './components/links-list';
 
@@ -21,6 +22,7 @@ export default function App() {
           </div>
         </section>
       </main>
+      <Toaster />
     </QueryClientProvider>
   );
 }

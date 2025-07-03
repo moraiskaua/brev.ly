@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import CopyIcon from '../assets/copy.svg';
 import { DownloadIcon } from '../assets/download';
 import { LinkIcon } from '../assets/link';
@@ -26,35 +27,47 @@ export default function LinksList() {
   });
 
   async function handleExport() {
-    const blob = await exportCsv();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'links.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
+    try {
+      const csvUrl = await exportCsv();
+      const a = document.createElement('a');
+      a.href = csvUrl;
+      a.download = 'links.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast.success('CSV exportado!');
+    } catch {
+      toast.error('Erro ao exportar CSV');
+    }
   }
 
   async function handleCopy(shortUrl: string) {
     const url = `${window.location.origin.replace(/\/$/, '')}/${shortUrl}`;
     await navigator.clipboard.writeText(url);
+    toast.success('Link copiado!');
   }
 
   return (
     <div className='bg-gray-100 rounded-lg p-6 flex flex-col gap-4 w-full max-w-md min-h-[220px]'>
-      <div className='flex justify-between items-center border-b border-gray-200 pb-2'>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await handleExport();
+        }}
+        className='flex justify-between items-center border-b border-gray-200 pb-2'
+      >
         <strong className='w-full'>Meus links</strong>
         <Button
           type='button'
           variant='secondary'
-          onClick={handleExport}
           disabled={!links || links.length === 0 || isLoading || isFetching}
           icon={<DownloadIcon color='#74798B' width={20} height={20} />}
           className='text-xs'
+          onClick={handleExport}
         >
           Baixar CSV
         </Button>
-      </div>
+      </form>
       {isLoading || isFetching ? (
         <div className='flex-1 flex items-center justify-center text-gray-400'>
           Carregando...
@@ -87,6 +100,7 @@ export default function LinksList() {
                       variant='secondary'
                       className='p-1 rounded hover:bg-gray-200 transition'
                       title='Copiar link'
+                      type='button'
                       onClick={() => handleCopy(link.shortUrl)}
                     >
                       <img src={CopyIcon} alt='Copiar' className='w-4 h-4' />
@@ -97,7 +111,11 @@ export default function LinksList() {
                         await mutateDelete(link.id);
                       }}
                     >
-                      <Button variant='secondary' type='button'>
+                      <Button
+                        variant='secondary'
+                        type='button'
+                        onClick={async () => await mutateDelete(link.id)}
+                      >
                         <TrashIcon width={16} height={16} />
                       </Button>
                     </form>
