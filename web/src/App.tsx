@@ -33,7 +33,7 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/redirect/:shortUrl' element={<RedirectPage />} />
-        <Route path='/404' element={<NotFoundPage />} />
+        <Route path='/*' element={<NotFoundPage />} />
       </Routes>
       <Toaster />
     </QueryClientProvider>
