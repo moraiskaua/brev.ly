@@ -17,12 +17,7 @@ export default function NotFoundPage() {
         <p className='text-center text-gray-500 text-sm'>
           O link que você está tentando acessar não existe, foi removido ou é
           uma URL inválida. Saiba mais em{' '}
-          <Link
-            to='/'
-            className='text-blue-700 underline'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
+          <Link to='/' className='text-blue-700 underline'>
             brev.ly
           </Link>
           .
